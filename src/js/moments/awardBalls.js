@@ -1,5 +1,5 @@
 import Matter from "matter-js";
-import {getProjectName} from "../modules/pathDetector";
+import {getProjectName, getBasePath} from "../modules/pathDetector";
 import {prefersReducedMotion} from "../utils/prefersReducedMotion";
 
 // CSSDA winner badges — three Matter.js balls launched chaotically onto the
@@ -116,7 +116,9 @@ function spawn() {
     const byBody = new Map();
     const timeouts = [];
 
+    const base = getBasePath();
     AWARDS.forEach((def) => {
+        const fullSrc = (def.src.startsWith('/') && !def.src.startsWith(base)) ? `${base}${def.src}` : def.src;
         const a = document.createElement("a");
         a.href = SITE_URL;
         a.target = "_blank";
@@ -127,7 +129,7 @@ function spawn() {
             `position:fixed;left:0;top:0;width:${R * 2}px;height:${R * 2}px;` +
             `pointer-events:auto;will-change:transform;opacity:0;transition:opacity .3s;`;
         a.innerHTML =
-            `<img src="${def.src}" alt="" draggable="false" ` +
+            `<img src="${fullSrc}" alt="" draggable="false" ` +
             `style="display:block;width:100%;height:100%;border-radius:50%;-webkit-user-drag:none;user-select:none;">`;
         root.appendChild(a);
 

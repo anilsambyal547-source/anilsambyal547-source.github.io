@@ -16,6 +16,29 @@
     <meta name="twitter:description" content="AI and Data Science student at RGGEC (2025-29 batch). Machine learning, data analysis, and reliable AI systems.">
 
     <link rel="icon" type="image/svg+xml" href="/assets/img/favicon.svg">
+    <script>
+        (function() {
+            var p = window.location.pathname;
+            var base = (p === '/portfolio' || p.indexOf('/portfolio/') === 0) ? '/portfolio' : '';
+            window.__BASE_PATH__ = base;
+            if (base) {
+                var fix = function() {
+                    document.querySelectorAll('link[href^="/assets"], img[src^="/assets"]').forEach(function(el) {
+                        if (el.tagName === 'LINK') {
+                            el.href = base + el.getAttribute('href');
+                        } else if (el.tagName === 'IMG') {
+                            el.src = base + el.getAttribute('src');
+                        }
+                    });
+                };
+                if (document.readyState === 'loading') {
+                    document.addEventListener('DOMContentLoaded', fix);
+                } else {
+                    fix();
+                }
+            }
+        })();
+    </script>
     
 
     

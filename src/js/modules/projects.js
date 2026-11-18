@@ -1,5 +1,5 @@
 import $ from "jquery";
-import {getProjectName, isOtherPage} from "./pathDetector";
+import {getProjectName, isOtherPage, getBasePath} from "./pathDetector";
 import {initAutoFitText, fitWhenFontsReady} from "./autoFitText";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
@@ -15,9 +15,10 @@ import {isMobileDevice} from "../utils/isMobileDevice";
 gsap.registerPlugin(ScrollTrigger, ScrambleTextPlugin);
 
 function fetchProjFile(){
+    const base = getBasePath();
     return new Promise((resolve, reject) => {
         $.ajax({
-            url: '../assets/projects.json',
+            url: `${base}/assets/projects.json`,
             method: 'GET',
             dataType: 'json',
             success: function(data) {
@@ -33,9 +34,10 @@ function fetchProjFile(){
 }
 
 function fetchProjectContent(file) {
+    const base = getBasePath();
     return new Promise((resolve, reject) => {
         $.ajax({
-            url: `../assets/site-content/lang-${getCurrentLanguage()}/${file}`,
+            url: `${base}/assets/site-content/lang-${getCurrentLanguage()}/${file}`,
             method: 'GET',
             dataType: 'html',
             success: function(data) {
@@ -43,7 +45,7 @@ function fetchProjectContent(file) {
             },
             error: function(_xhr, _status, _error) {
                 $.ajax({
-                    url: `../assets/site-content/${file}`,
+                    url: `${base}/assets/site-content/${file}`,
                     method: 'GET',
                     dataType: 'html',
                     success: function(data) {
@@ -759,14 +761,15 @@ function generateProject(current_container){
             }
         });
 
-        let name = getProjectName().replaceAll("/","").replaceAll(".html","");
+        let name = getProjectName();
         if(!name){
             console.error("Project name not found in URL");
             reject(new Error("Project name not found"));
-            //move to /
-            window.location.href = "/";
+            //move to home
+            window.location.href = `${getBasePath()}/`;
             return;
         }
+        name = name.replaceAll("/","").replaceAll(".html","");
         let projs = await fetchProjFile();
         let p = null;
         //find project in the list
@@ -786,7 +789,9 @@ function generateProject(current_container){
         }
         const nameOfTitle = p.name.charAt(0).toUpperCase() + p.name.slice(1);
         $("title").text(getTranslation(nameOfTitle));
-        let img_src = ".."+p?.image;
+        const base = getBasePath();
+        let rawImage = p?.image || "";
+        let img_src = (rawImage.startsWith('/') && !rawImage.startsWith(base)) ? `${base}${rawImage}` : rawImage;
         let content = "";
         try {
             content = await fetchProjectContent(p.url);

@@ -2,13 +2,15 @@ import $ from 'jquery';
 import yeast from "yeast";
 import {turnOffNeon, turnOnNeon} from "./neons";
 import barba from "@barba/core";
-import {getProjectName} from "./pathDetector";
+import {getProjectName, getBasePath} from "./pathDetector";
 import {getCurrentLanguage, getTranslation} from "./translator";
 import {colors} from "./changeTheme";
 import initLazyLoad from "./lazyLoad";
 import {initAutoFitText, fitWhenFontsReady} from "./autoFitText";
 let index = 0;
 function addProject(name, desc, img_src, directURL, url){
+    const base = getBasePath();
+    const resolvedImgSrc = (img_src && img_src.startsWith('/') && !img_src.startsWith(base)) ? `${base}${img_src}` : img_src;
     const myId = yeast().replaceAll('-', '_').replaceAll(".", "_");
     let clickable = $(`<div class="project neon" id="${myId}">${name}</div>`);
     $(".s1 .projects").append(clickable);
@@ -20,7 +22,7 @@ function addProject(name, desc, img_src, directURL, url){
     let section = $(`<section class="project" id="section-${myId}" style="--border:${colors[index]}" data-change-color-index="${index}">
                 <h1>${name}</h1>
                 <h2>${desc}</h2>
-                <img data-src="${img_src}" src="${img_src.replace('img','img-low-res')}" alt="${name}">
+                <img data-src="${resolvedImgSrc}" src="${resolvedImgSrc.replace('img','img-low-res')}" alt="${name}">
             </section>`);
     $("main.main-content").append(section);
     $(section).on("click", ()=>{
@@ -30,12 +32,7 @@ function addProject(name, desc, img_src, directURL, url){
         }
         window.redirectType = "home-to-project";
         window.projectSectionID = `section-${myId}`;
-        //if url is not localhost
-        // if(url.includes("localhost") || url.includes("127.0.0.1")){
-            barba.go(`/project?${name.replaceAll(' ', '-').replaceAll('.', '_')}`);
-        // }else{
-        //     barba.go(`/${name.replaceAll(' ', '-').replaceAll('.', '_')}`);
-        // }
+        barba.go(`${base}/project?${name.replaceAll(' ', '-').replaceAll('.', '_')}`);
     });
     index = (index + 1) % colors.length;
 }
@@ -46,13 +43,14 @@ function fetchProjects() {
     $(".s1 h4 span").text(getTranslation("PROJECTS"));
     $("[data-barba-namespace='project']").remove();
     return new Promise((resolve, reject) => {
+        const base = getBasePath();
         $.ajax({
-            url: '/assets/desc_translations.json',
+            url: `${base}/assets/desc_translations.json`,
             method: 'GET',
             dataType: 'json',
             success: function(translations) {
                 $.ajax({
-                    url: '/assets/projects.json',
+                    url: `${base}/assets/projects.json`,
                     method: 'GET',
                     dataType: 'json',
                     success: function(data) {

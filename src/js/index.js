@@ -22,7 +22,7 @@ import initScrollZoom from "./modules/scrollZoom";
 import './modules/clock';
 import { initAutoFitText, fitWhenFontsReady } from './modules/autoFitText.js';
 import { initSterionHyphenFix } from './modules/sterionHyphenFix.js';
-import {getProjectName, isOtherPage, isProjectPage} from "./modules/pathDetector";
+import {getProjectName, isOtherPage, isProjectPage, getBasePath} from "./modules/pathDetector";
 import {fetchProjects} from "./modules/fetchProjects";
 import {generateProject, setupTextRevealEffects, refitLockedMeasurements} from "./modules/projects";
 import {onJapaneseFontsReady} from "./modules/fontSync";
@@ -43,7 +43,7 @@ barba.init({
             if (!res.ok && res.status === 404) {
                 // Fetch the project shell explicitly for unknown routes
                 try {
-                    const fb = await fetch('/project/index.html', options);
+                    const fb = await fetch(`${getBasePath()}/project/index.html`, options);
                     const txt = await fb.text();
                     return stripScripts(txt);
                 } catch (e) {
@@ -227,6 +227,16 @@ window.addEventListener('resize', setHeightValueOfMain);
 document.addEventListener('DOMContentLoaded', () => {
     $(".wait-for-data").remove();
     testForMobile();
+
+    const base = getBasePath();
+    if (base) {
+        document.querySelectorAll('a[href^="/"]').forEach(a => {
+            const href = a.getAttribute('href');
+            if (href && !href.startsWith(base)) {
+                a.setAttribute('href', base + href);
+            }
+        });
+    }
 
     // Reload when crossing the mobile breakpoint to ensure correct DOM adaptation
     let wasMobile = window.innerWidth < 600;

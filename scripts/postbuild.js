@@ -15,7 +15,9 @@ if (fs.existsSync(srcAssets)) {
 fs.writeFileSync(path.join(distDir, '.nojekyll'), '');
 console.log('✓ Created dist/.nojekyll');
 
-// Create _redirects for Netlify / Cloudflare Pages SPA fallback
-const redirects = `/* /index.html 200\n`;
-fs.writeFileSync(path.join(distDir, '_redirects'), redirects);
-console.log('✓ Created dist/_redirects');
+// Remove _redirects if it exists (causes Cloudflare error 100324 infinite loop)
+const redirectsPath = path.join(distDir, '_redirects');
+if (fs.existsSync(redirectsPath)) {
+    fs.unlinkSync(redirectsPath);
+    console.log('✓ Removed dist/_redirects');
+}

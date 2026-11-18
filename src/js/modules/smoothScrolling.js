@@ -17,21 +17,21 @@ function initLenises(){
         lenis2.destroy();
     }catch(e){ /* Lenis may not be initialized yet; safe to ignore */ }
     lenis = new Lenis({
-        duration: 1.2,
+        duration: 0.6,
         easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
         smooth: true,
         wrapper: document.querySelector('.main'),
         content: document.querySelector('.main-content'),
-        touchMultiplier: 2,
-        wheelMultiplier: 1,
+        touchMultiplier: 1.5,
+        wheelMultiplier: 1.2,
     });
     lenis2 = new Lenis({
-        duration: 1.2,
+        duration: 0.6,
         easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
         smooth: true,
         wrapper:document.querySelector('.s1'),
-        touchMultiplier: 2,
-        wheelMultiplier: 1,
+        touchMultiplier: 1.5,
+        wheelMultiplier: 1.2,
         autoRaf:true,
     });
     if(!alreadyInited){
@@ -96,7 +96,7 @@ function scrollToSection(sectionIndex) {
     const targetScroll = sectionIndex * height;
 
     lenis.scrollTo(targetScroll, {
-        duration: 2,
+        duration: 0.6,
         easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t))
     });
 }

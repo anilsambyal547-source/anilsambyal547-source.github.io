@@ -12,12 +12,12 @@ export default function initLazyLoad() {
         document.head.appendChild(style);
     }
 
-    // Config
-    const MAX_BLOCK_SIZE = 32; // starting pixel block dimension in CSS pixels (bigger -> chunkier)
-        const DURATION = 900; // ms for depixelation
-        const FPS = 10; // throttle animation to ~3 fps
-        const FRAME_MS = Math.round(1000 / FPS);
-        const INTERSECT_DELAY_MS = 750; // must be in view this long before loading
+    // Config - optimized for instant, snappy loading
+    const MAX_BLOCK_SIZE = 32; // starting pixel block dimension in CSS pixels
+    const DURATION = 350; // ms for crisp fast depixelation (was 900ms)
+    const FPS = 24; // smooth animation (was 10fps)
+    const FRAME_MS = Math.round(1000 / FPS);
+    const INTERSECT_DELAY_MS = 50; // start immediately in view (was 750ms delay)
 
     const images = document.querySelectorAll('img[data-src]:not([data-lazy-loaded])');
     images.forEach(img => {

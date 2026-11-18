@@ -360,22 +360,24 @@ h5 + h3{
     justify-content: center;
     font-family:'Y224', 'Teknaf', sans-serif;
 }
-.sidebar .s1 h4:nth-child(1) span{
+.sidebar .s1 > h4:nth-child(1) span{
     height:1em;
     text-shadow:  0 0 20px var(--black);
 }
-.safari .sidebar .s1 h4:nth-child(1) span{
+.safari .sidebar .s1 > h4:nth-child(1) span{
     text-shadow:  0 0 15px rgba(0,0,0,0.1);
 }
 .sidebar .s1 .projects{
     display: flex;
     flex-direction: column;
-    gap: 5px;
-    height:100%;
+    gap: 3px;
+    height: auto;
+    min-height: 100%;
 }
 .sidebar .s1 .projects .project{
     font-family: 'Sterion','Y224', 'LogoPixies', sans-serif;
     white-space: nowrap;
+    flex-shrink: 0;
 }
 
 /* Table of Contents indentation styles */
@@ -483,19 +485,35 @@ h6{
     font-family: 'Sterion','Y224', sans-serif;
 }
 
+.sidebar .s1 .projects .pill,
 .pill{
     color:var(--background);
     background:var(--black);
-    padding: 5px 15px;
+    padding: 4px 10px;
     font-family: 'Y224', sans-serif;
+    font-size: 0.7rem;
     display: flex;
     align-items: center;
-    justify-content: center;
-    margin-top:5px;
-    margin-bottom:5px;
+    justify-content: flex-start;
+    margin-top: 6px;
+    margin-bottom: 4px;
+    height: auto !important;
+    min-height: 22px;
+    flex-shrink: 0;
+    box-sizing: border-box;
 }
+.sidebar .s1 .projects .pill:first-child{
+    margin-top: 2px;
+}
+.sidebar .s1 .projects .pill span,
 .pill span{
-    height:1em;
+    height: auto !important;
+    min-height: 1em;
+    line-height: 1.25 !important;
+    display: block !important;
+    width: 100%;
+    letter-spacing: 0.04em;
+    word-break: normal;
 }
 
 .main {

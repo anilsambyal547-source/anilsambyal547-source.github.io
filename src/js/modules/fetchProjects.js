@@ -1,20 +1,20 @@
 import $ from 'jquery';
 import yeast from "yeast";
-import {turnOffNeon, turnOnNeon} from "./neons";
+import { turnOffNeon, turnOnNeon } from "./neons";
 import barba from "@barba/core";
 import {getProjectName, getBasePath} from "./pathDetector";
 import {getCurrentLanguage, getTranslation} from "./translator";
 import {colors} from "./changeTheme";
 import initLazyLoad from "./lazyLoad";
-import {initAutoFitText, fitWhenFontsReady} from "./autoFitText";
+import { initAutoFitText, fitWhenFontsReady } from "./autoFitText";
 let index = 0;
-function addProject(name, desc, img_src, directURL, url){
+function addProject(name, desc, img_src, directURL, url) {
     const base = getBasePath();
     const resolvedImgSrc = (img_src && img_src.startsWith('/') && !img_src.startsWith(base)) ? `${base}${img_src}` : img_src;
     const myId = yeast().replaceAll('-', '_').replaceAll(".", "_");
     let clickable = $(`<div class="project neon" id="${myId}">${name}</div>`);
     $(".s1 .projects").append(clickable);
-    if(name.includes('-')){
+    if (name.includes('-')) {
         turnOnNeon(document.querySelector(`#${myId}`));
         turnOffNeon(document.querySelector(`#${myId}`));
     }
@@ -25,8 +25,8 @@ function addProject(name, desc, img_src, directURL, url){
                 <img data-src="${resolvedImgSrc}" src="${resolvedImgSrc.replace('img','img-low-res')}" alt="${name}">
             </section>`);
     $("main.main-content").append(section);
-    $(section).on("click", ()=>{
-        if(directURL) {
+    $(section).on("click", () => {
+        if (directURL) {
             window.open(url, "_blank");
             return;
         }
@@ -48,17 +48,17 @@ function fetchProjects() {
             url: `${base}/assets/desc_translations.json`,
             method: 'GET',
             dataType: 'json',
-            success: function(translations) {
+            success: function (translations) {
                 $.ajax({
                     url: `${base}/assets/projects.json`,
                     method: 'GET',
                     dataType: 'json',
-                    success: function(data) {
+                    success: function (data) {
                         // console.log(data);
                         try {
                             // Process each category
                             data.forEach(category => {
-                                if(category.category === "HIDDEN") return;
+                                if (category.category === "HIDDEN") return;
                                 // Add category header
                                 const categoryHeader = $(`<h4 class="pill"><span>${getTranslation(category.category)}</span></h4>`);
                                 $(".s1 .projects").append(categoryHeader);
@@ -67,8 +67,8 @@ function fetchProjects() {
                                 // Add projects for this category
                                 category.items.forEach(project => {
                                     let desc = project.desc;
-                                    if(project.name in translations)
-                                        if(currentLang in translations[project.name])
+                                    if (project.name in translations)
+                                        if (currentLang in translations[project.name])
                                             desc = translations[project.name][currentLang];
                                     addProject(project.name, desc, project.image, project.directURL, project.url);
                                 });
@@ -86,13 +86,13 @@ function fetchProjects() {
                             reject(error);
                         }
                     },
-                    error: function(xhr, status, error) {
+                    error: function (xhr, status, error) {
                         console.error('Error fetching projects:', error);
                         reject(new Error(`Failed to fetch projects: ${error}`));
                     }
                 });
             },
-            error: function(xhr, status, error) {
+            error: function (xhr, status, error) {
                 console.error('Error fetching translations:', error);
                 reject(new Error(`Failed to fetch translations: ${error}`));
             }
@@ -101,4 +101,4 @@ function fetchProjects() {
 }
 
 
-export {fetchProjects};
+export { fetchProjects };
